@@ -35,8 +35,11 @@ namespace ElevatorSim.Tests
             var commandName = commandType.Name;
             var commandProperties = commandType.GetProperties();
 
-            var methodName = commandName.Replace(SUT.GetType().Name, "");
+            var aggregateName = SUT.GetType().Name.Replace("Aggregate", "");
+            var methodName = commandName.Replace(aggregateName, "");
             var methodInfo = SUT.GetType().GetMethod(methodName);
+            ((object)methodInfo).Should().NotBeNull(
+                "Could not find action method named '{0}' on {1}", methodName, SUT.GetType().Name);
             var parameterInfos = methodInfo.GetParameters().OrderBy(pi => pi.Position);
             var parameters = new List<object>();
             foreach (var parameterInfo in parameterInfos)
@@ -49,12 +52,8 @@ namespace ElevatorSim.Tests
             methodInfo.Invoke(SUT, parameters.ToArray());
 
             var result = SUT.GetUncommittedChanges().SingleOrDefault();
-            if (result == null)
-            {
-                var message = string.Format("Couldn't find {0} in the uncommitted changes", @event.GetType().Name);
-                this.Log().Error(message);
-                Assert.True(false, message);
-            }
+            result.Should().NotBeNull(
+                "Could not find event '{0}' in the uncommitted changes", @event.GetType().Name);
 
             var eventTypeProperties = @event.GetType().GetProperties();
             foreach (var propertyInfo in eventTypeProperties)
