@@ -1,78 +1,72 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace ElevatorSim.Infrastructure
 {
-    public interface IAggregateRoot
+    public interface IMessage {}
+    public interface ICommand : IMessage {}
+    public interface IEvent : IMessage {}
+    public interface IAggregateRoot {}
+
+    public interface IAggregateState
     {
-        Guid Id { get; }
-        int Version { get; }
-        IEnumerable<Event> GetUncommittedChanges();
-        void MarkChangesAsCommitted();
-        void LoadsFromHistory(IEnumerable<Event> history);
+        void Apply(IEvent theEvent);
     }
 
-    public abstract class AggregateRoot : IAggregateRoot
+    public abstract class AggregateRoot<TState> : IAggregateRoot 
+        where TState : IAggregateState
     {
-        private readonly List<Event> _changes = new List<Event>();
+        protected readonly TState State;
+        public List<IEvent> EventsThatHappened = new List<IEvent>();
 
-        public abstract Guid Id { get; }
-        public int Version { get; internal set; }
-
-        public IEnumerable<Event> GetUncommittedChanges()
+        public AggregateRoot(TState state)
         {
-            return _changes;
+            State = state;
         }
 
-        public void MarkChangesAsCommitted()
+        protected void ApplyChange(IEvent theEvent)
         {
-            _changes.Clear();
-        }
-
-        public void LoadsFromHistory(IEnumerable<Event> history)
-        {
-            foreach (var e in history) ApplyChange(e, false);
-        }
-
-        protected void ApplyChange(Event @event)
-        {
-            ApplyChange(@event, true);
-        }
-
-        private void ApplyChange(Event @event, bool isNew)
-        {
-            this.AsDynamic().Apply(@event);
-            if (isNew) _changes.Add(@event);
+            EventsThatHappened.Add(theEvent);
+            State.Apply(theEvent);
+            Bus.Publish(theEvent);
         }
     }
 
-    public interface IRepository<T> where T : IAggregateRoot, new()
+    /// <summary>
+    /// Special exception that is thrown by application services
+    /// when something goes wrong in an expected way. This exception
+    /// bears human-readable code (the name property acting as sort of a 'key') which is used to verify it
+    /// in the tests.
+    /// An Exception name is a hard-coded identifier that is still human readable but is not likely to change.
+    /// </summary>
+    [Serializable]
+    public class DomainError : Exception
     {
-        void Save(IAggregateRoot aggregate, int expectedVersion);
-        T GetById(Guid id);
+        public DomainError(string message) : base(message) { }
+
+        /// <summary>
+        /// Creates domain error exception with a string name that is easily identifiable in the tests
+        /// </summary>
+        /// <param name="name">The name to be used to identify this exception in tests.</param>
+        /// <param name="format">The format.</param>
+        /// <param name="args">The arguments.</param>
+        /// <returns></returns>
+        public static DomainError Named(string name, string format, params object[] args)
+        {
+            return new DomainError(string.Format(format, args))
+            {
+                Name = name
+            };
+        }
+
+        public string Name { get; private set; }
+
+        public DomainError(string message, Exception inner) : base(message, inner) { }
+
+        protected DomainError(
+            SerializationInfo info,
+            StreamingContext context)
+            : base(info, context) { }
     }
-
-    public class Repository<T> : IRepository<T> where T : IAggregateRoot, new() //shortcut you can do as you see fit with new()
-    {
-        private readonly IEventStore _storage;
-
-        public Repository(IEventStore storage)
-        {
-            _storage = storage;
-        }
-
-        public void Save(IAggregateRoot aggregate, int expectedVersion)
-        {
-            _storage.SaveEvents(aggregate.Id, aggregate.GetUncommittedChanges(), expectedVersion);
-        }
-
-        public T GetById(Guid id)
-        {
-            var obj = new T();//lots of ways to do this
-            var e = _storage.GetEventsForAggregate(id);
-            obj.LoadsFromHistory(e);
-            return obj;
-        }
-    }
-
 }

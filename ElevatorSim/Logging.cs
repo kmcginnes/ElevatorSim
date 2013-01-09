@@ -254,7 +254,7 @@ namespace ElevatorSim
             var messageBuilder = new StringBuilder();
             messageBuilder
                 .AppendLine(message)
-                .AppendFormat("Message: {0}", exception.Message)
+                .AppendFormat("IMessage: {0}", exception.Message)
                 .AppendLine()
                 .AppendLine("Stack Trace:")
                 .Append(exception.StackTrace);

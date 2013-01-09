@@ -36,9 +36,9 @@ namespace ElevatorSim
             var floorName = "Lobby";
             if (countOfFloors > 0)
             {
-                floorName = string.Format("FloorAggregate {0}", floorLevel);
+                floorName = string.Format("Floor {0}", floorLevel);
             }
-            _bus.Send(new BuildFloor(Guid.NewGuid(), floorLevel, floorName));
+            _bus.Send(new Messages(new FloorId(countOfFloors), floorLevel, floorName));
             NotifyOfPropertyChange(() => Floors);
         }
     }

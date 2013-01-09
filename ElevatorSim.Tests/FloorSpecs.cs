@@ -4,15 +4,16 @@ using Xunit;
 
 namespace ElevatorSim.Tests
 {
-    public class FloorSpecs : SpecsFor<Floor.FloorAggregate>
+    public class FloorSpecs : floor_application_service_spec
     {
+        FloorId Id = new FloorId(11);
+
         [Fact]
         public void build_floor()
         {
             Given();
-            var id = Guid.NewGuid();
-            When(new BuildFloor(id, 1, "Lobby"));
-            Then(new FloorBuilt(id, 1, "Lobby"));
+            When(new Messages(Id, 1, "Lobby"));
+            Expect(new FloorBuilt(Id, 1, "Lobby"));
         }
     }
 }

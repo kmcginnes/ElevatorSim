@@ -3,27 +3,13 @@ using ElevatorSim.Infrastructure;
 
 namespace ElevatorSim.Floor
 {
-    public class FloorAggregate : AggregateRoot
+    public class FloorAggregate : AggregateRoot<FloorState>
     {
-        private Guid _id;
-        private int _level;
-        private string _name;
+        public FloorAggregate(FloorState state) : base(state) {}
 
-        public override Guid Id
+        public void Build(FloorId id, int level, string name)
         {
-            get { return _id; }
-        }
-
-        private void Apply(FloorBuilt e)
-        {
-            _id = e.Id;
-            _level = e.Level;
-            _name = e.Name;
-        }
-
-        public void Build(Guid id, int level, string name)
-        {
-            if(id == Guid.Empty)
+            if(id == null)
                 throw new ArgumentNullException("id", "Id can not be empty");
             if(level == 0)
                 throw new ArgumentOutOfRangeException("level", "Level can not be zero");
