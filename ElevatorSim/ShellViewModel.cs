@@ -38,7 +38,7 @@ namespace ElevatorSim
             {
                 floorName = string.Format("Floor {0}", floorLevel);
             }
-            _bus.Send(new Messages(new FloorId(countOfFloors), floorLevel, floorName));
+            _bus.Send(new BuildFloor(new FloorId(countOfFloors), floorLevel, floorName));
             NotifyOfPropertyChange(() => Floors);
         }
     }

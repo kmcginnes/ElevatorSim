@@ -17,5 +17,15 @@ namespace ElevatorSim.Floor
                 throw new ArgumentNullException("name", "Name can not be null or empty");
             ApplyChange(new FloorBuilt(id, level, name));
         }
+
+        public void PushUpButton()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void PushDownButton()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

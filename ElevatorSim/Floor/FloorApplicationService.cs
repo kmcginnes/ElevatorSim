@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ElevatorSim.Infrastructure;
 
 namespace ElevatorSim.Floor
 {
-    public class FloorApplicationService : IApplicationService, IHandle<Messages>
+    public class FloorApplicationService : IApplicationService, IHandle<BuildFloor>
     {
         private readonly IEventStore _eventStore;
 
@@ -38,9 +34,19 @@ namespace ElevatorSim.Floor
         }
 
         // Now let's use the Update helper method above to wire command messages to actual aggregate methods
-        public void When(Messages cmd)
+        public void When(BuildFloor cmd)
         {
             Update(cmd, ar => ar.Build(cmd.Id, cmd.Level, cmd.Name));
+        }
+
+        public void When(PushFloorUpButton cmd)
+        {
+            Update(cmd, ar => ar.PushUpButton());
+        }
+
+        public void When(FloorPushDownButton cmd)
+        {
+            Update(cmd, ar => ar.PushDownButton());
         }
     }
 }

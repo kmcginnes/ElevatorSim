@@ -63,6 +63,7 @@
   <ItemGroup>
     <Compile Include="application_service_specs.cs" />
     <Compile Include="CompareObjects.cs" />
+    <Compile Include="EnsureAllCommandsHandled.cs" />
     <Compile Include="FloorSpecs.cs" />
     <Compile Include="floor_application_service_spec.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

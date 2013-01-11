@@ -76,7 +76,6 @@
     <Compile Include="Floor\Messages.cs" />
     <Compile Include="Floor\FloorAggregate.cs" />
     <Compile Include="Floor\FloorApplicationService.cs" />
-    <Compile Include="Floor\FloorId.cs" />
     <Compile Include="Floor\FloorState.cs" />
     <Compile Include="Floor\FloorView.cs" />
     <Compile Include="Infrastructure\AbstractIdentity.cs" />
