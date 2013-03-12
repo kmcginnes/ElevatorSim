@@ -10,7 +10,7 @@
             <RowDefinition Height="30"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Button x:Name="BuildFloor" Content="Build FloorAggregate"/>
+        <Button x:Name="BuildFloor" Content="Build BuildingAggregate"/>
         <ListBox x:Name="Floors" Grid.Row="1"/>
     </Grid>
 </UserControl>

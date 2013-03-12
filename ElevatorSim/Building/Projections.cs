@@ -1,22 +1,22 @@
 using ElevatorSim.Infrastructure;
 
-namespace ElevatorSim.Floor
+namespace ElevatorSim.Building
 {
     public class FloorDto
     {
-        public FloorId Id;
+        public BuildingId BuildingId;
         public int Level;
         public string Name;
 
-        public FloorDto(FloorId id, int level, string name)
+        public FloorDto(BuildingId buildingId, int level, string name)
         {
-            Id = id;
+            BuildingId = buildingId;
             Level = level;
             Name = name;
         }
     }
 
-    public class FloorView : IHandle<FloorBuilt>
+    public class FloorProjection : IHandle<FloorBuilt>
     {
         public void When(FloorBuilt message)
         {

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Caliburn.Micro;
-using ElevatorSim.Floor;
 using ElevatorSim.Infrastructure;
 using Ninject;
 using Ninject.Extensions.Conventions;

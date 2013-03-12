@@ -1,13 +1,13 @@
 ﻿using System;
 using ElevatorSim.Infrastructure;
 
-namespace ElevatorSim.Floor
+namespace ElevatorSim.Building
 {
-    public class FloorApplicationService : IApplicationService, IHandle<BuildFloor>
+    public class BuildingApplicationService : IApplicationService, IHandle<OpenBuilding>, IHandle<BuildFloor>
     {
         private readonly IEventStore _eventStore;
 
-        public FloorApplicationService(IEventStore eventStore)
+        public BuildingApplicationService(IEventStore eventStore)
         {
             if (eventStore == null)
                 throw new ArgumentNullException("eventStore");
@@ -20,33 +20,38 @@ namespace ElevatorSim.Floor
             ((dynamic)this).When((dynamic)command);
         }
 
-        void Update(IFloorCommand command, Action<FloorAggregate> commandExecutor)
+        void Update(IBuildingCommand command, Action<BuildingAggregate> commandExecutor)
         {
             var key = command.Id.ToString();
             var eventStream = _eventStore.LoadEventStream(key);
 
-            var aggregateState = new FloorState(eventStream.Events);
-            var aggregate = new FloorAggregate(aggregateState);
+            var aggregateState = new BuildingState(eventStream.Events);
+            var aggregate = new BuildingAggregate(aggregateState);
 
             commandExecutor(aggregate);
 
             _eventStore.AppendEventsToStream(key, eventStream.StreamVersion, aggregate.EventsThatHappened);
         }
 
+        public void When(OpenBuilding cmd)
+        {
+            Update(cmd, ar => ar.Open(cmd.Id));
+        }
+
         // Now let's use the Update helper method above to wire command messages to actual aggregate methods
         public void When(BuildFloor cmd)
         {
-            Update(cmd, ar => ar.Build(cmd.Id, cmd.Level, cmd.Name));
+            Update(cmd, ar => ar.BuildFloor(cmd.Id, cmd.Level, cmd.Name));
         }
 
         public void When(PushFloorUpButton cmd)
         {
-            Update(cmd, ar => ar.PushUpButton());
+            //Update(cmd, ar => ar.PushUpButton());
         }
 
         public void When(FloorPushDownButton cmd)
         {
-            Update(cmd, ar => ar.PushDownButton());
+            //Update(cmd, ar => ar.PushDownButton());
         }
     }
 }

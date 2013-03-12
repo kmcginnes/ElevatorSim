@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using Caliburn.Micro;
-using ElevatorSim.Floor;
+using ElevatorSim.Building;
 using ElevatorSim.Infrastructure;
 
 namespace ElevatorSim
@@ -11,6 +11,8 @@ namespace ElevatorSim
     public class ShellViewModel : PropertyChangedBase
     {
         private readonly ICommandSender _bus;
+        private readonly BuildingId _buildingId;
+
         public IEnumerable<FloorListItemViewModel> Floors
         {
             get
@@ -27,6 +29,8 @@ namespace ElevatorSim
         public ShellViewModel(ICommandSender bus)
         {
             _bus = bus;
+            _buildingId = new BuildingId(1);
+            _bus.Send(new OpenBuilding(_buildingId));
         }
 
         public void BuildFloor()
@@ -38,7 +42,7 @@ namespace ElevatorSim
             {
                 floorName = string.Format("Floor {0}", floorLevel);
             }
-            _bus.Send(new BuildFloor(new FloorId(countOfFloors), floorLevel, floorName));
+            _bus.Send(new BuildFloor(_buildingId, floorLevel, floorName));
             NotifyOfPropertyChange(() => Floors);
         }
     }

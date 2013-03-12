@@ -70,25 +70,31 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AppBootstrapper.cs" />
+    <Compile Include="ElevatorBank\Elevator.cs" />
     <Compile Include="FloorListItemView.xaml.cs">
       <DependentUpon>FloorListItemView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Floor\Messages.cs" />
-    <Compile Include="Floor\FloorAggregate.cs" />
-    <Compile Include="Floor\FloorApplicationService.cs" />
-    <Compile Include="Floor\FloorState.cs" />
-    <Compile Include="Floor\FloorView.cs" />
+    <Compile Include="Building\Messages.cs" />
+    <Compile Include="Building\BuildingAggregate.cs" />
+    <Compile Include="Building\BuildingApplicationService.cs" />
+    <Compile Include="Building\BuildingState.cs" />
+    <Compile Include="Building\Projections.cs" />
     <Compile Include="Infrastructure\AbstractIdentity.cs" />
     <Compile Include="Infrastructure\Bus.cs" />
     <Compile Include="Infrastructure\Database.cs" />
     <Compile Include="Infrastructure\Domain.cs" />
     <Compile Include="Infrastructure\EventStore.cs" />
+    <Compile Include="Infrastructure\Maybe.1.cs" />
+    <Compile Include="Infrastructure\Maybe.cs" />
+    <Compile Include="Infrastructure\MaybeParse.cs" />
+    <Compile Include="Infrastructure\Result.1.cs" />
+    <Compile Include="Infrastructure\Result.2.cs" />
+    <Compile Include="Infrastructure\Result.cs" />
     <Compile Include="Infrastructure\Utils.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Elevator.cs" />
     <Compile Include="Logging.cs" />
     <Compile Include="ShellView.xaml.cs">
       <DependentUpon>ShellView.xaml</DependentUpon>
